@@ -13,6 +13,6 @@ downloadBtn.addEventListener('click', async () => {
   const blob = await response.blob();
   const downloadLink = document.createElement('a');
   downloadLink.href = URL.createObjectURL(blob);
-  downloadLink.download = 'qr-code.png';
+  downloadLink.download = `${input.value}-qrcode.png`;
   downloadLink.click();
 });
