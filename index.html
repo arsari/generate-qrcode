@@ -1,19 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>QR-Code Generator</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
     <div class="container">
       <h1>Generate QR-Code</h1>
       <div class="gap">
-        <img src="" alt="">
+        <canvas id="qrCanvas" width="300" height="300"></canvas>
       </div>
-      <input type="text" name="text" placeholder="Enter text to generate QR Code">
+      <div class="gap">
+        <label for="logoInput">Logo:</label>
+        <input type="file" id="logoInput" accept="image/*" />
+        <label for="textInput">Text/URL:</label>
+        <input
+          type="text"
+          id="textInput"
+          placeholder="Enter text/URL to generate QR Code"
+        />
+      </div>
       <div class="gap">
         <button id="generate">Generate</button>
         <button id="download">Download</button>
@@ -21,5 +29,4 @@
     </div>
     <script src="script.js" defer></script>
   </body>
-
 </html>
