@@ -27,11 +27,11 @@ generateBtn.addEventListener("click", () => {
   qrImg.crossOrigin = "anonymous";
   qrImg.onload = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(qrImg, 0, 0, 250, 250);
+    ctx.drawImage(qrImg, 0, 0, 300, 300);
 
     // Draw logo if available
     if (logoImg) {
-      const size = 50; // Best practice: 20% or less of QR size
+      const size = 60; // Best practice: 20% or less of QR size
       const x = (canvas.width - size) / 2;
       const y = (canvas.height - size) / 2;
       ctx.drawImage(logoImg, x, y, size, size);
