@@ -2,31 +2,69 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>QR-Code Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Generator</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body>
-    <div class="container">
-      <h1>Generate QR-Code</h1>
-      <div class="gap">
+    <header class="site-header">
+      <h1>QR Code Generator</h1>
+    </header>
+
+    <main class="qr-generator">
+      <section class="preview">
         <canvas id="qrCanvas" width="300" height="300"></canvas>
-      </div>
-      <div class="gap">
-        <label for="logoInput">Logo:</label>
-        <input type="file" id="logoInput" accept="image/*" />
-        <label for="textInput">Text/URL:</label>
-        <input
-          type="text"
-          id="textInput"
-          placeholder="Enter text/URL to generate QR Code"
-        />
-      </div>
-      <div class="gap">
-        <button id="generate">Generate</button>
-        <button id="download">Download</button>
-      </div>
-    </div>
+      </section>
+
+      <form class="controls" novalidate>
+        <div class="form-group">
+          <label for="textInput">Text or URL</label>
+          <input
+            type="text"
+            id="textInput"
+            placeholder="Enter text or URL"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="logoInput">Logo (optional)</label>
+          <input type="file" id="logoInput" accept="image/*" />
+        </div>
+
+        <fieldset class="form-group shape-group">
+          <legend>Logo Shape</legend>
+          <label
+            ><input type="radio" name="shape" value="square" checked />
+            Square</label
+          >
+          <label
+            ><input type="radio" name="shape" value="circle" /> Circle</label
+          >
+        </fieldset>
+
+        <div class="form-group color-group">
+          <label for="qrColor">QR Color</label>
+          <div class="color-inputs">
+            <input type="color" id="qrColor" value="#000000" />
+            <input type="text" id="qrColorText" value="#000000" readonly />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="transparentBg" />
+            Transparent Background
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="generate">Generate</button>
+          <button type="button" id="download" disabled>Download</button>
+        </div>
+      </form>
+    </main>
+
     <script src="script.js" defer></script>
   </body>
 </html>
