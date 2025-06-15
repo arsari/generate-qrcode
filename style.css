@@ -1,12 +1,12 @@
 /* —— CSS Variables for easy theming —— */
 :root {
   --clr-primary: #4caf50;
-  --clr-secondary: #607d8b;
+  --clr-secondary: #e82828;
   --clr-background: #f5f7fa;
   --clr-surface: #ffffff;
   --clr-text: #333333;
   --clr-border: #e0e0e0;
-  --radius: 10px;
+  --radius: 15px;
   --gap: 1rem;
   --transition: 0.3s ease;
 }
@@ -67,6 +67,18 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+fieldset {
+  border-radius: var(--radius);
+}
+
+legend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
 @media (min-width: 600px) {
   .controls {
     grid-template-columns: repeat(2, 1fr);
@@ -78,18 +90,12 @@ body {
   flex-direction: column;
 }
 
-.form-group label {
-  margin-bottom: 0.5em;
-  font-weight: 600;
-}
-
 .form-group input[type="text"],
 .form-group input[type="file"],
 .color-inputs input[type="color"],
 .color-inputs input[type="text"] {
   padding: 0.5em;
   border: 1px solid var(--clr-border);
-  border-radius: var(--radius);
   font-size: 1rem;
   transition: border-color var(--transition);
 }
@@ -100,15 +106,16 @@ body {
 }
 
 .shape-group {
-  grid-column: span 2;
   display: flex;
   justify-content: space-around;
 }
 
-.color-group .color-inputs {
+.color-inputs {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  padding: 0 0 0.5rem;
 }
 
 .checkbox-label {
@@ -123,6 +130,7 @@ body {
   display: flex;
   justify-content: center;
   gap: var(--gap);
+  margin-top: 10px;
 }
 
 button {
@@ -136,7 +144,16 @@ button {
     opacity var(--transition);
 }
 
-#generate {
+#download[disabled],
+#download[disabled]:hover {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: grey;
+}
+
+#generate,
+#download,
+#clear {
   background-color: var(--clr-primary);
   color: var(--clr-surface);
 }
@@ -147,13 +164,9 @@ button {
 }
 
 #generate:hover,
-#download:hover {
+#download:hover,
+#clear:hover {
   background-color: var(--clr-secondary);
-}
-
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 canvas {

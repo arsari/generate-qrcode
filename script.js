@@ -6,6 +6,7 @@ const colorText = document.querySelector("#qrColorText");
 const transparentBox = document.querySelector("#transparentBg");
 const generateBtn = document.querySelector("#generate");
 const downloadBtn = document.querySelector("#download");
+const clearBtn = document.querySelector("#clear");
 const canvas = document.querySelector("#qrCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -56,6 +57,12 @@ function hexToRgb(hex) {
 
 // — Generate QR Code —
 generateBtn.addEventListener("click", () => {
+  if (!textInput.value.trim()) {
+    ctx.clearRect(0, 0, size, size);
+    downloadBtn.disabled = true;
+    alert("Please enter text to generate QR code.");
+    return;
+  }
   // Disable download until rendering completes
   downloadBtn.disabled = true;
 
@@ -132,4 +139,13 @@ downloadBtn.addEventListener("click", () => {
   link.download = `${textInput.value || "qr"}-qrcode.png`;
   link.href = canvas.toDataURL("image/png");
   link.click();
+});
+
+// - Clear canvas and inputs -
+clearBtn.addEventListener("click", () => {
+  textInput.value = "";
+  logoInput.value = "";
+  logoImg = null;
+  ctx.clearRect(0, 0, size, size);
+  downloadBtn.disabled = true;
 });
