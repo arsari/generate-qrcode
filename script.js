@@ -8,17 +8,17 @@ const generateBtn = document.querySelector("#generate");
 const downloadBtn = document.querySelector("#download");
 const clearBtn = document.querySelector("#clear");
 const canvas = document.querySelector("#qrCanvas");
+canvas.style.display = "none"; // Hide canvas from UI
+const previewImg = document.querySelector("#qrPreview");
+const testLink = document.querySelector("#testLink");
 const ctx = canvas.getContext("2d");
 
 // — Retina-Ready Setup —
-// Scale the backing store for high-DPI (“Retina”) displays:
 const dpr = window.devicePixelRatio || 1;
-const size = 300; // logical size in CSS pixels
-canvas.width = size * dpr; // physical pixels
+const size = 300;
+canvas.width = size * dpr;
 canvas.height = size * dpr;
-canvas.style.width = `${size}px`; // CSS display size
-canvas.style.height = `${size}px`;
-ctx.scale(dpr, dpr); // ensure drawing uses logical pixels
+ctx.scale(dpr, dpr);
 
 // — Load logo when selected —
 let logoImg = null;
@@ -33,7 +33,6 @@ logoInput.addEventListener("change", (e) => {
   reader.readAsDataURL(file);
 });
 
-// — Sync color picker ↔ text field —
 colorPicker.addEventListener("input", (e) => {
   colorText.value = e.target.value;
 });
@@ -44,7 +43,6 @@ colorText.addEventListener("input", (e) => {
   }
 });
 
-// — Utility: convert "#RRGGBB" → { r, g, b } —
 function hexToRgb(hex) {
   const clean = hex.replace("#", "");
   const num = parseInt(clean, 16);
@@ -63,50 +61,47 @@ generateBtn.addEventListener("click", () => {
     alert("Please enter text to generate QR code.");
     return;
   }
-  // Disable download until rendering completes
+
   downloadBtn.disabled = true;
 
-  // Prepare data & color parameters
-  const data = encodeURIComponent(textInput.value);
+  const data = encodeURIComponent(textInput.value.trim());
   const { r, g, b } = hexToRgb(colorPicker.value);
-  const colorParam = `${r}-${g}-${b}`; // API expects hyphens
+  const colorParam = `${r}-${g}-${b}`;
 
   let apiUrl =
     `https://api.qrserver.com/v1/create-qr-code/` +
     `?size=${size}x${size}` +
     `&data=${data}` +
-    `&color=${colorParam}`;
+    `&color=${colorParam}` +
+    `&ecc=H`;
 
   if (!transparentBox.checked) {
-    apiUrl += `&bgcolor=255-255-255`; // white background with hyphens
+    apiUrl += `&bgcolor=255-255-255`;
   }
 
-  // Load QR image
   const qrImg = new Image();
   qrImg.crossOrigin = "anonymous";
   qrImg.onload = () => {
-    // Clear & draw QR at logical size
     ctx.clearRect(0, 0, size, size);
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, size, size);
     ctx.drawImage(qrImg, 0, 0, size, size);
 
-    // If transparent, strip white pixels
     if (transparentBox.checked) {
       const imgData = ctx.getImageData(0, 0, size, size);
       const d = imgData.data;
       for (let i = 0; i < d.length; i += 4) {
-        if (d[i] > 250 && d[i + 1] > 250 && d[i + 2] > 250) {
+        if (d[i] === 255 && d[i + 1] === 255 && d[i + 2] === 255) {
           d[i + 3] = 0;
         }
       }
       ctx.putImageData(imgData, 0, 0);
     }
 
-    // Determine selected shape
     const shape = document.querySelector('input[name="shape"]:checked').value;
 
-    // Draw logo (clipped to circle if requested)
     if (logoImg) {
-      const logoSize = size * 0.3; // 20% of QR
+      const logoSize = size * 0.2;
       const x = (size - logoSize) / 2;
       const y = (size - logoSize) / 2;
 
@@ -126,14 +121,17 @@ generateBtn.addEventListener("click", () => {
       ctx.restore();
     }
 
-    // Enable download now that canvas is up-to-date
+    const dataUrl = canvas.toDataURL("image/png");
+    previewImg.src = dataUrl;
+    testLink.href = textInput.value.trim();
+    testLink.textContent = "Open/Preview QR Content";
     downloadBtn.disabled = false;
   };
 
   qrImg.src = apiUrl;
 });
 
-// — Download as PNG —
+// — Download —
 downloadBtn.addEventListener("click", () => {
   const link = document.createElement("a");
   link.download = `${textInput.value || "qr"}-qrcode.png`;
@@ -141,11 +139,13 @@ downloadBtn.addEventListener("click", () => {
   link.click();
 });
 
-// - Clear canvas and inputs -
 clearBtn.addEventListener("click", () => {
   textInput.value = "";
   logoInput.value = "";
   logoImg = null;
   ctx.clearRect(0, 0, size, size);
   downloadBtn.disabled = true;
+  previewImg.src = "";
+  testLink.href = "#";
+  testLink.textContent = "";
 });
